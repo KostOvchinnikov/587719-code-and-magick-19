@@ -11,7 +11,7 @@ var BAR_Y = 70;
 var BAR_GAP = 50;
 var TEXT_X = 160;
 var TEXT_Y = 250;
-var BAR_WIDTH = 50;
+var BAR_WIDTH = 40;
 var barHeight = 160;
 
 var renderCloud = function (ctx, x, y, color) {
@@ -35,16 +35,30 @@ window.renderStatistics = function (ctx, players, times) {
   renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, 'rgba(0, 0, 0, 0.7)');
   renderCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');
 
-  ctx.fillStyle = '#000';
+  // ctx.fillStyle = '#000';
+  ctx.font = '16px PT Mono';
 
   var maxTime = getMaxElement(times);
 
   for (var i = 0; i < players.length; i++) {
-    ctx.fillStyle = '000';
+    var height = barHeight * times[i] / maxTime;
+    var y = BAR_Y + (barHeight - height);
+    var score = Math.round(times[i]);
+
+    var x = Math.floor(Math.random() * 100);
+    var color = 'hsl(240,' + x + '%, 50%)';
+
+    if (players[i] === 'Вы') {
+      color = 'rgba(255, 0, 0, 1)';
+    }
+
+    ctx.fillStyle = color;
+    ctx.fillRect(BAR_X + (BAR_WIDTH + BAR_GAP) * i, y, BAR_WIDTH, height);
+    ctx.fillStyle = '#000';
     ctx.fillText(players[i], TEXT_X + (BAR_WIDTH + BAR_GAP) * i, TEXT_Y);
-    ctx.fillRect(BAR_X + (BAR_WIDTH + BAR_GAP) * i, BAR_Y, BAR_WIDTH, (barHeight * times[i]) / maxTime);
+    ctx.fillText(score, TEXT_X + (BAR_WIDTH + BAR_GAP) * i, y - GAP);
   }
 
   ctx.fillText('Ура вы победили!', TEXT_X, (CLOUD_Y + FONT_GAP));
-  ctx.fillText('Список результатов:', TEXT_X, (CLOUD_Y + FONT_GAP) + FONT_GAP); // Как выполнить перенос строки?
+  ctx.fillText('Список результатов:', TEXT_X, (CLOUD_Y + FONT_GAP) + FONT_GAP);
 };
